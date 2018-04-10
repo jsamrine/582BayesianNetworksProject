@@ -1,0 +1,45 @@
+     , Data scientist, Database administrator, Desktop applications developer, DevOps specialist, Developer with a statistics or mathematics background, Embedded applications/devices developer, Graphic designer, Graphics programming, Machine learning specialist, Mobile developer, Other, Quality assurance engineer, Systems administrator,Data scientist,Database administrator,Desktop applications developer,Developer with a statistics or mathematics background,Embedded applications/devices developer,Graphics programming,Machine learning specialist,Mobile developer,Other,Quality assurance engineer,Systems administrator,Web developer
+0,41,72,109,35,42,18,31,17,14,57,16,24,56,9,1,18,15,15,3,4,29,18,2,1,258
+1,16,44,78,20,19,13,16,18,10,52,7,9,36,6,4,13,3,11,3,3,11,12,0,0,226
+2,54,102,163,58,60,41,32,34,21,103,23,20,74,5,3,55,19,23,5,6,50,17,4,3,534
+3,79,184,326,126,110,63,53,31,26,219,48,30,139,19,10,78,52,42,13,8,95,47,4,7,954
+4,99,200,370,136,122,66,63,55,34,247,72,46,157,13,5,93,45,65,15,14,111,41,5,8,1146
+5,194,435,762,290,251,181,125,105,84,498,105,97,321,43,14,182,78,132,26,29,238,81,10,9,2326
+6,233,529,965,416,298,194,137,140,83,613,153,108,425,42,12,203,121,174,31,33,271,109,10,10,3015
+7,440,923,1580,729,567,313,243,236,173,1026,288,188,728,74,24,332,180,246,44,78,497,206,26,16,5128
+8,556,1047,1882,811,662,420,259,302,177,1196,360,238,803,98,25,415,237,340,71,90,573,278,27,27,5621
+9,415,699,1113,581,459,289,159,203,138,766,209,173,554,71,24,246,145,174,41,60,389,178,9,16,3565
+10,342,655,905,465,343,248,223,194,158,724,184,170,532,42,14,178,97,135,45,43,282,138,9,10,2674
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,0,1,2,3,4,5,6,7,8,9,10,,,,,,,,,,,,,,
+Web developer,258,226,534,954,1146,2326,3015,5128,5621,3565,2674,,,,,,,,,,,,,,
+ Desktop applications developer,109,78,163,326,370,762,965,1580,1882,1113,905,,,,,,,,,,,,,,
+ Mobile developer,57,52,103,219,247,498,613,1026,1196,766,724,,,,,,,,,,,,,,
+ Database administrator,72,44,102,184,200,435,529,923,1047,699,655,,,,,,,,,,,,,,
+ Systems administrator,56,36,74,139,157,321,425,728,803,554,532,,,,,,,,,,,,,,
+ DevOps specialist,35,20,58,126,136,290,416,729,811,581,465,,,,,,,,,,,,,,
+ Developer with a statistics or mathematics background,42,19,60,110,122,251,298,567,662,459,343,,,,,,,,,,,,,,
+ Data scientist,41,16,54,79,99,194,233,440,556,415,342,,,,,,,,,,,,,,
+Mobile developer,29,11,50,95,111,238,271,497,573,389,282,,,,,,,,,,,,,,
+ Embedded applications/devices developer,18,13,41,63,66,181,194,313,420,289,248,,,,,,,,,,,,,,
+ Graphic designer,31,16,32,53,63,125,137,243,259,159,223,,,,,,,,,,,,,,
+ Graphics programming,17,18,34,31,55,105,140,236,302,203,194,,,,,,,,,,,,,,
+ Other,16,7,23,48,72,105,153,288,360,209,184,,,,,,,,,,,,,,
+Desktop applications developer,18,13,55,78,93,182,203,332,415,246,178,,,,,,,,,,,,,,
+ Quality assurance engineer,24,9,20,30,46,97,108,188,238,173,170,,,,,,,,,,,,,,
+ Machine learning specialist,14,10,21,26,34,84,83,173,177,138,158,,,,,,,,,,,,,,
+Other,18,12,17,47,41,81,109,206,278,178,138,,,,,,,,,,,,,,
+Embedded applications/devices developer,15,11,23,42,65,132,174,246,340,174,135,,,,,,,,,,,,,,
+Developer with a statistics or mathematics background,15,3,19,52,45,78,121,180,237,145,97,,,,,,,,,,,,,,
+Graphics programming,3,3,5,13,15,26,31,44,71,41,45,,,,,,,,,,,,,,
+Machine learning specialist,4,3,6,8,14,29,33,78,90,60,43,,,,,,,,,,,,,,
+Data scientist,9,6,5,19,13,43,42,74,98,71,42,,,,,,,,,,,,,,
+Database administrator,1,4,3,10,5,14,12,24,25,24,14,,,,,,,,,,,,,,
+Systems administrator,1,0,3,7,8,9,10,16,27,16,10,,,,,,,,,,,,,,
+Quality assurance engineer,2,0,4,4,5,10,10,26,27,9,9,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,
+,     ,,,,,,,,,,,,,,,,,,,,,,,,
