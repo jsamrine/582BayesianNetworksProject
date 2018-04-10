@@ -19,10 +19,12 @@ job security and job satisfaction
 with open('survey_results_public.csv', 'r') as infile:
     reader = csv.DictReader(infile)
     total = 0
+    outGraph
+    nullEntry = false
     for row in reader:
-        if row['Gender'] != 'NA':
-            row_data = row['Gender']
-            
+        for col in row.keys():
+            if row[col] == 'NA':
+                nullEntry = true
             if row_data.upper() != "MALE" and row_data.upper() != "FEMALE":
                 row_data = "Other"
             try:
