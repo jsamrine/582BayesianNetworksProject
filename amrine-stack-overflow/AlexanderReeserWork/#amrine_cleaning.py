@@ -38,9 +38,10 @@ def try_parse_dec(string):
 	return ret_val
 
 outlist = []
-keys = ['Race', 'Gender', 'Country', 'EducationTypes', 'MajorUndergrad', \
+keys = ['Race', 'Gender', 'Country', 'MajorUndergrad', \
 		'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction',\
 		'Salary', 'ExpectedSalary']
+language_keys = set()
 min_salary = 10**100
 max_salary = 0
 gender_keys = ['male', 'female', 'nonbinary']
@@ -52,6 +53,10 @@ with open('survey_results_public.csv', 'r') as infile:
 	for row in reader:
 		# for key in row.keys():
 		# 	print(key)
+		if row["DeveloperType"] != "NA":
+			row["DeveloperType"] = row["DeveloperType"].split(";")[0]
+		if row["Race"] != "NA":
+			row["Race"] = row["Race"].split(";")[0]
 		if row["Salary"] != "NA":
 			SalaryCount += 1
 
@@ -79,46 +84,64 @@ with open('survey_results_public.csv', 'r') as infile:
 				row["Gender"] = "Female"
 			elif "Male" in row["Gender"]:
 				row["Gender"] = "Male"
+			elif "NA" in row["Gender"]:
+				row["Gender"] = "NA"
 			else:
 				row["Gender"] = "Nonbinary"
 			break
-			#if gender.lower() not in gender_keys:
-				#row["Gender"] = "Nonbinary"
+		
+		if row["HaveWorkedLanguage"] != "NA":
+			split_languages = row["HaveWorkedLanguage"].replace(" ", "").replace(",","").split(";")
+			for language in split_languages:
+				language_keys.add("Have%s"%language)
+				row["Have%s"%language] = 1
+		if row["WantWorkLanguage"] != "NA":
+			split_languages = row["WantWorkLanguage"].replace(" ", "").replace(",","").split(";")
+			for language in split_languages:
+				language_keys.add("Want%s"%language)
+				row["Want%s"%language] = 1
+		for key in row.keys():
+			if row[key] == "NA" or row[key] == "I don't know" or row[key] == "I prefer not to say":
+				row[key] = ""
 				
 		
 		outlist.append(row)
-print(min_salary)
-print(max_salary)
+for key in language_keys:
+	keys.append(key)
+
 salary_brackets = [x*10000 for x in range(min_salary//10000, (max_salary//10000))]
-print(salary_brackets[-1])
 salary_brackets.append(190000)
 salary_brackets.append(200000)
 
 salary_brackets_str = []
 #print(salary_brackets)
-with open("salary_brackets.txt", 'w') as outfile:
-	for i in range(len(salary_brackets)-1):
-		salary_brackets_str.append("%i-%i" %(salary_brackets[i]+1, salary_brackets[i+1]))
+#with open("salary_brackets.txt", 'w') as outfile:
+for i in range(len(salary_brackets)-1):
+	salary_brackets_str.append("%i-%i" %(salary_brackets[i]+1, salary_brackets[i+1]))
 
-		outfile.write("S_"+salary_brackets_str[-1]+"\n")
+#		outfile.write("S_"+salary_brackets_str[-1]+"\n")
 #	print(salary_brackets_str[-1])
 # print(ExpectedSalaryCount)
 # print(SalaryCount)
+sorted_keys = sorted(keys)
+outlist_len = len(outlist)
 with open('amrine_cleaned_survey_resultsv1.1.csv', 'w') as outfile:
 	outfile.write(" id ," + ",".join(sorted(keys)) + "\n")
-	for i in range(len(outlist)):
+	for i in range(outlist_len):
 		writeRow = '%i' %i
 		#print(i)
-		for key in sorted(keys):
-			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "NA":
+		for key in sorted_keys:
+			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "":
 				index_of_bracket = bin_search(salary_brackets, int(outlist[i][key]), 0, len(salary_brackets))
 				print("Row: %i" %i)
 				print("Salary %i with bracket %i is less then %i" %(int(outlist[i][key]), index_of_bracket, salary_brackets[index_of_bracket]))
 				print("Salary %i goes in bracket: %s" %(int(outlist[i][key]), salary_brackets_str[index_of_bracket-1]))
 
 				writeRow = ",".join([writeRow, salary_brackets_str[index_of_bracket-1]])
-
 			else:
-				writeRow = ",".join([writeRow, str(outlist[i][key]).replace(",", ";")])
+				try:
+					writeRow = ",".join([writeRow, str(outlist[i][key]).replace(",", "")])
+				except:
+					writeRow = ",".join([writeRow, "0"])
 		writeRow = "\n".join([writeRow, ''])
 		outfile.write(writeRow)

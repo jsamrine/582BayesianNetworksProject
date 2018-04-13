@@ -151,12 +151,13 @@ def parse_nationality_and_gender(reader):
 	return table
 
 def count_education_type(reader):
-	table = defaultdict(dict)
-
+	table = defaultdict()
+	ret_table = defaultdict()
+	total = 0
 	for row in reader:
 		if row['FormalEducation'] != 'NA' and row['JobSatisfaction'] != 'NA':
-			print("found")
-			row_data = row['FormalEducation'].replace(" ", "")
+			
+			row_data = row['FormalEducation']
 			# column_data = int(row['JobSatisfaction'])
 			for edu in row_data.split(";"):
 				try:
@@ -165,17 +166,29 @@ def count_education_type(reader):
 					table[edu] = 1
 				total+=1
 	
+	ret_table["other"] = 0
+	sum_table = 0
 	for key in sorted(table.keys()):
 		table[key] /= total
-	return table, sorted(table.keys())
+		if table[key] < .01:
+			ret_table["other"] += (table[key]*100)
+		else:
+			ret_table[key] = (table[key]*100)
+
+	for key in sorted(ret_table.keys()):
+		sum_table += ret_table[key]
+	print(sum_table)
+
+	return ret_table, sorted(ret_table.keys())
 
 def count_undergrad_major(reader):
-	table = defaultdict(dict)
-
+	table = defaultdict()
+	ret_table = defaultdict()
+	total = 0
 	for row in reader:
 		if row['MajorUndergrad'] != 'NA' and row['JobSatisfaction'] != 'NA':
-			print("found")
-			row_data = row['MajorUndergrad'].replace(" ", "")
+			
+			row_data = row['MajorUndergrad']
 			# column_data = int(row['JobSatisfaction'])
 			for major in row_data.split(";"):
 				try:
@@ -184,29 +197,49 @@ def count_undergrad_major(reader):
 					table[major] = 1
 				total+=1
 	
+	ret_table["other"] = 0
+	sum_table = 0
 	for key in sorted(table.keys()):
 		table[key] /= total
-	return table, sorted(table.keys())
+		if table[key] < .01:
+			ret_table["other"] += (table[key]*100)
+		else:
+			ret_table[key] = (table[key]*100)
 
-def count_have_worked_languages
+	for key in sorted(ret_table.keys()):
+		sum_table += ret_table[key]
+	print(sum_table)
+
+	return ret_table, sorted(ret_table.keys())
+
+def count_have_worked_languages(reader):
 	table = defaultdict()
-
+	ret_table = defaultdict()
+	total = 0
 	for row in reader:
 		if row['HaveWorkedLanguage'] != 'NA' and row['JobSatisfaction'] != 'NA':
-			print("found")
-			row_data = row['HaveWorkedLanguage'].replace(" ", "")
+			
+			row_data = row['HaveWorkedLanguage']
 			# column_data = int(row['JobSatisfaction'])
 			for language in row_data.split(";"):
 				try:
 					table[language] += 1
 				except:
 					table[language] = 1
-					total+=1
-	
+				total+=1
+	ret_table["other"] = 0
+	sum_table = 0
 	for key in sorted(table.keys()):
 		table[key] /= total
-	return table, sorted(table.keys())
-	
+		if table[key] < .01:
+			ret_table["other"] += (table[key]*100)
+		else:
+			ret_table[key] = (table[key]*100)
+	for key in sorted(ret_table.keys()):
+		sum_table += ret_table[key]
+	print(sum_table)
+	return ret_table, sorted(ret_table.keys())
+"""
 avg_salary = 0
 salary_Count = 0
 with open('survey_results_public.csv', 'r') as infile:
@@ -217,7 +250,7 @@ with open('survey_results_public.csv', 'r') as infile:
 			salary_Count += 1
 
 avg_salary = avg_salary // salary_Count
-
+"""
 with open('survey_results_public.csv', 'r') as infile:
 	reader = csv.DictReader(infile)
 	education_prob, education_headers = count_education_type(reader)
@@ -227,51 +260,18 @@ with open('survey_results_public.csv', 'r') as infile:
 	language_prob, language_headers = count_have_worked_languages(reader)
 
 with open('output_ungrad_count.csv', 'w') as outfile:
-	row = '{:^5}'.format("")
-	for key in undergrad_headers:
-		row = ",".join([row, '{:^5}'.format(key)])
-	outfile.write(row+'\n')
-
+	
 	for row_key in undergrad_headers:
-		
-		row = '{:^5}'.format(row_key)
-		for key in header:
-			try:
-				row = ",".join([row, '{:^5}'.format(undergrad_prob[row_key][key])])
-			except:
-				row = ",".join([row, '{:^5}'.format("NA")])
-		outfile.write(row+'\n')
+		outline ="%s,%.4f\n" %(row_key, undergrad_prob[row_key])
+		outfile.write(outline)
 
 with open('output_language_count.csv', 'w') as outfile:
-	row = '{:^5}'.format("")
-	for key in language_headers:
-		row = ",".join([row, '{:^5}'.format(key)])
-	outfile.write(row+'\n')
-
 	for row_key in language_headers:
-		
-		row = '{:^5}'.format(row_key)
-		for key in header:
-			try:
-				row = ",".join([row, '{:^5}'.format(table[row_key][key])])
-			except:
-				row = ",".join([row, '{:^5}'.format("NA")])
-		outfile.write(row+'\n')
+		outfile.write("%s,%.4f\n" %(row_key, language_prob[row_key]))
 
 with open('output_education_type_count.csv', 'w') as outfile:
-	row = '{:^5}'.format("")
-	for key in education_headers:
-		row = ",".join([row, '{:^5}'.format(key)])
-	outfile.write(row+'\n')
-
 	for row_key in education_headers:
-		
-		row = '{:^5}'.format(row_key)
-		for key in header:
-
-			row = ",".join([row, '{:^5}'.format(table[row_key][key])])
-
-		outfile.write(row+'\n')
+		outfile.write("%s,%.4f\n" %(row_key, education_prob[row_key]))
 """
 with open('outputplworked.csv', 'w') as outfile:
 	for row_key in table2.keys():
