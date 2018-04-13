@@ -17,7 +17,7 @@ job security and job satisfaction
 
 
 with open('survey_results_public.csv', 'r') as infile:
-    keys = ['Race', 'Gender', 'Country', 'EducationTypes', 'MajorUndergrad', 'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction']
+    keys = ['Race', 'Gender', 'Country', 'EducationTypes', 'MajorUndergrad', 'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction', 'ProgramHobby', 'FormalEducation', 'HomeRemote', 'YearsProgram', 'JobSeekingStatus', 'Currency']
     reader = csv.DictReader(infile)
     total = 0
     outGraph = []
@@ -32,8 +32,10 @@ with open('survey_results_public.csv', 'r') as infile:
         if noNull:
             outGraph.append(row)
             
-with open('full_cleaned_survey_results_public.csv', 'w') as outfile:   
+with open('full_cleaned_survey_results_public.csv', 'w') as outfile:  
+    string = ",".join(keys)
     
+    outfile.write(" ,%s\n" %string)
     print(len(outGraph))
     for row in outGraph:
         writeRow = ''
