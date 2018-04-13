@@ -25,14 +25,14 @@ with open('survey_results_public.csv', 'r') as infile:
     for row in reader:
         noNull = True
         for key in keys:
-            if row[key] == 'NA':
-                noNull = False
+            #if row[key] == 'NA':
+            #    noNull = False
             if "," in row[key]:
                 row[key] = row[key].replace(",", " ")
         if noNull:
             outGraph.append(row)
             
-with open('cleaned_survey_results_public.csv', 'w') as outfile:   
+with open('full_cleaned_survey_results_public.csv', 'w') as outfile:   
     
     print(len(outGraph))
     for row in outGraph:
