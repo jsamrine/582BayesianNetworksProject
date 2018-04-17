@@ -17,7 +17,7 @@ job security and job satisfaction
 
 
 with open('survey_results_public.csv', 'r') as infile:
-    keys = ['Race', 'Gender', 'Country', 'EducationTypes', 'MajorUndergrad', 'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction', 'ProgramHobby', 'FormalEducation', 'HomeRemote', 'YearsProgram', 'JobSeekingStatus', 'Currency']
+    keys = ['Race', 'Gender', 'MajorUndergrad', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction', 'ProgramHobby', 'FormalEducation', 'HomeRemote', 'YearsProgram', 'JobSeekingStatus', 'Currency', 'WorkStart', 'TabsSpaces', 'Overpaid', 'LastNewJob', 'ChangeWorld', 'ChallengeMyself', 'UnderstandComputers']
     reader = csv.DictReader(infile)
     total = 0
     outGraph = []
