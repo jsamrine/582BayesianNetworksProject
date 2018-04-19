@@ -11,8 +11,6 @@ Relationships
 problem solving and job satisfaction
 coding language and job satisfaction
 job security and job satisfaction
-
-
 """
 
 
@@ -31,10 +29,10 @@ with open('survey_results_public.csv', 'r') as infile:
                 row[key] = row[key].replace(",", " ")
         if noNull:
             outGraph.append(row)
-            
-with open('full_cleaned_survey_results_public.csv', 'w') as outfile:  
+
+with open('full_cleaned_survey_results_public.csv', 'w') as outfile:
     string = ",".join(keys)
-    
+
     outfile.write(" ,%s\n" %string)
     print(len(outGraph))
     for row in outGraph:
@@ -43,9 +41,9 @@ with open('full_cleaned_survey_results_public.csv', 'w') as outfile:
             writeRow = ",".join([writeRow, row[key]])
         writeRow = "\n".join([writeRow, ''])
         outfile.write(writeRow)
-            
-            
-    
+
+
+
     #with open('outputGender.csv', 'w') as outfile:
     print(total)
     for row_key in table.keys():
@@ -53,4 +51,3 @@ with open('full_cleaned_survey_results_public.csv', 'w') as outfile:
         print(row_key)
         print(table[row_key]/total)
         # header = table[row_key].keys()
-

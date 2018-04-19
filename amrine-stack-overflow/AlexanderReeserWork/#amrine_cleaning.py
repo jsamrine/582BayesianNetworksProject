@@ -6,19 +6,14 @@ def bin_search(_list, val, l_index, r_index):
         #print(_list[int((r_index+l_index)/2)])
         if(l_index <= r_index):
             if _val >= val and val > (_val-10000):
-                # print("Found match %i >= %i > %s" %(_val, val, (_val-10000)))
-                # print("%i less than %i" %((r_index+l_index)//2, len(_list)))
                 return (r_index+l_index)//2
             elif _val > val:
-                # print("val val: %i is greater than target val: %i" %(_val, val))
-                # print("recursing with l_index: %i and r_index: %i" %(l_index, int((l_index + r_index)/2)-1))
                 return bin_search(_list, val, l_index, (l_index + r_index)//2-1)
             elif _val < val:
-                # print("val val: %i is less than target val: %i" %(_val, val))
-                # print("recursing with l_index: %i and r_index: %i" %(int((l_index + r_index)/2)+1, r_index))
                 return bin_search(_list, val, (l_index + r_index)//2+1, r_index)
         else:
         	return len(_list)-1
+
 def try_parse_e(string):
 	split_val = string.split("e")
 	ret_val = split_val[0]
@@ -58,12 +53,11 @@ with open('survey_results_public.csv', 'r') as infile:
 	ExpectedSalaryCount = 0
 	SalaryCount = 0
 	for row in reader:
-		# for key in row.keys():
-		# 	print(key)
+
+        # Clean dev type
 		if row["DeveloperType"] != "NA":
 			row["DeveloperType"] = row["DeveloperType"].split(";")[0]
-		if row["Race"] != "NA":
-			row["Race"] = row["Race"].split(";")[0]
+        # parse out salary
 		if row["Salary"] != "NA":
 			SalaryCount += 1
 
@@ -75,6 +69,7 @@ with open('survey_results_public.csv', 'r') as infile:
 
 			min_salary = min(int(float(row["Salary"])), min_salary)
 			max_salary = max(int(float(row["Salary"])), max_salary)
+        # parse out expected salary
 		if row["ExpectedSalary"] != "NA":
 			ExpectedSalaryCount += 1
 			if "e" in row["ExpectedSalary"]:
@@ -85,6 +80,7 @@ with open('survey_results_public.csv', 'r') as infile:
 
 			min_salary = min(int(float(row["ExpectedSalary"])), min_salary)
 			max_salary = max(int(float(row["ExpectedSalary"])), max_salary)
+        # assigns single gender as either gender conforming or nonbinary
 		for gender in row["Gender"].split(";"):
 			if "Female" in row["Gender"]:
 				row["Gender"] = "Female"
@@ -102,6 +98,7 @@ with open('survey_results_public.csv', 'r') as infile:
 				if language in language_keys:
 					language_keys2.add("Have%s"%language)
 					row["Have%s"%language] = 1
+
 		if row["WantWorkLanguage"] != "NA":
 			split_languages = row["WantWorkLanguage"].replace(" ", "").replace(",","").split(";")
 			for language in split_languages:
@@ -109,10 +106,12 @@ with open('survey_results_public.csv', 'r') as infile:
 					language_keys2.add("Want%s"%language)
 					row["Want%s"%language] = 1
 		for key in row.keys():
-			if row[key] == "NA" or row[key] == "I don't know" or row[key] == "I prefer not to say":
-				row[key] = ""
+			#if row[key] == "NA" or row[key] == "I don't know" or row[key] == "I prefer not to say":
+			if row[key] == "I don't know" or row[key] == "I prefer not to say":
+				row[key] = "NA"
 
 		outlist.append(row)
+
 for key in language_keys2:
 	keys.append(key)
 
@@ -121,24 +120,19 @@ salary_brackets.append(190000)
 salary_brackets.append(200000)
 
 salary_brackets_str = []
-#print(salary_brackets)
-#with open("salary_brackets.txt", 'w') as outfile:
+
 for i in range(len(salary_brackets)-1):
 	salary_brackets_str.append("%i-%i" %(salary_brackets[i]+1, salary_brackets[i+1]))
 
-#		outfile.write("S_"+salary_brackets_str[-1]+"\n")
-#	print(salary_brackets_str[-1])
-# print(ExpectedSalaryCount)
-# print(SalaryCount)
 sorted_keys = sorted(keys)
 outlist_len = len(outlist)
-with open('amrine_cleaned_survey_resultsv1.2.csv', 'w') as outfile:
+with open('amrine_cleaned_survey_resultsv1.3.csv', 'w') as outfile:
 	outfile.write(" id ," + ",".join(sorted(keys)) + "\n")
 	for i in range(outlist_len):
 		writeRow = '%i' %i
 		#print(i)
 		for key in sorted_keys:
-			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "":
+			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "NA":
 				index_of_bracket = bin_search(salary_brackets, int(outlist[i][key]), 0, len(salary_brackets))
 				writeRow = ",".join([writeRow, salary_brackets_str[index_of_bracket-1]])
 			else:
