@@ -40,8 +40,8 @@ keys = ['Race', 'Gender', 'Country', 'MajorUndergrad', \
 """
 keys = ['MajorUndergrad', 'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction',\
 		'Salary']
-language_keys = set(["Objective-C", "PHP", "Perl", "Python", "R", "Ruby", "SQL",\
-"Swift", "TypeScript", "VB.NET", "VBA", "Assembly", "C", "C#", "C++", "Java", "JavaScript", "Other"])
+language_keys = set(["PHP", "Perl", "Python", "SQL",\
+"Swift", "TypeScript", "C", "C#", "C++", "Java", "JavaScript", "Other"])
 language_keys2 = set()
 
 min_salary = 10**100
@@ -98,6 +98,9 @@ with open('survey_results_public.csv', 'r') as infile:
 				if language in language_keys:
 					language_keys2.add("Have%s"%language)
 					row["Have%s"%language] = 1
+				else:
+					language_keys2.add("HaveOther")
+					row["HaveOther"] = 1
 
 		if row["WantWorkLanguage"] != "NA":
 			split_languages = row["WantWorkLanguage"].replace(" ", "").replace(",","").split(";")
@@ -105,6 +108,9 @@ with open('survey_results_public.csv', 'r') as infile:
 				if language in language_keys:
 					language_keys2.add("Want%s"%language)
 					row["Want%s"%language] = 1
+				else:
+					language_keys2.add("WantOther")
+					row["WantOther"] = 1
 		for key in row.keys():
 			#if row[key] == "NA" or row[key] == "I don't know" or row[key] == "I prefer not to say":
 			if row[key] == "I don't know" or row[key] == "I prefer not to say":
@@ -145,6 +151,6 @@ with open('amrine_cleaned_survey_resultsv1.3.csv', 'w') as outfile:
 						writeRow = ",".join([writeRow, ""])
 					else:
 						writeRow = ",".join([writeRow, "0"])
-		if ",," not in writeRow:
+		if outlist[i]["JobSatisfaction"] != "NA" and outlist[i]["Salary"] != "NA":
 			writeRow = "\n".join([writeRow, ''])
 			outfile.write(writeRow)
