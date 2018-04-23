@@ -1,0 +1,12 @@
+Graphics programming;                                    ---A     :1731
+Desktop applications developer;                         ---B	  :10435
+Embedded applications/devices developer;                ---C      :3352
+DevOps specialist;                                      ---D      :4015
+Data scientist;                                         ---E      :3045
+Machine learning specialist;                            ---F      :1379
+Developer with a statistics or mathematics background;  ---G      :4091
+Database administrator;                                 ---H      :5192
+Systems administrator;                                  ---I      :4086
+Graphic designer;                                       ---J      :1426
+Quality assurance engineer                              ---K      :1252
+Other                                                             :16421
