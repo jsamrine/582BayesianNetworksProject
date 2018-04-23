@@ -56,14 +56,12 @@ with open('survey_results_public.csv', 'r') as infile:
 	ExpectedSalaryCount = 0
 	SalaryCount = 0
 	for row in reader:
-
         # Clean dev type
 		if row["DeveloperType"] != "NA":
 			row["DeveloperType"] = row["DeveloperType"].split(";")[0]
         # parse out salary
 		if row["Salary"] != "NA":
 			SalaryCount += 1
-
 			if "e" in row["Salary"]:
 				row["Salary"] = try_parse_e(row["Salary"])
 				#
@@ -77,14 +75,12 @@ with open('survey_results_public.csv', 'r') as infile:
 			ExpectedSalaryCount += 1
 			if "e" in row["ExpectedSalary"]:
 				row["ExpectedSalary"] = try_parse_e(row["ExpectedSalary"])
-
 			elif "." in row["ExpectedSalary"]:
 				row["ExpectedSalary"] = try_parse_dec(row["ExpectedSalary"])
 
 			min_salary = min(int(float(row["ExpectedSalary"])), min_salary)
 			max_salary = max(int(float(row["ExpectedSalary"])), max_salary)
         # assigns single gender as either gender conforming or nonbinary
-		
 		if "Female" in row["Gender"]:
 			row["Gender"] = "Female"
 		elif "Male" in row["Gender"]:
@@ -93,11 +89,11 @@ with open('survey_results_public.csv', 'r') as infile:
 			row["Gender"] = "NA"
 		else:
 			row["Gender"] = "Nonbinary"
-		
+
 		if row["DeveloperType"] != "NA":
 			split_row = row["DeveloperType"].replace(" ", "").replace(",","").split(";")
 			for dev_type in split_row:
-				print("%s - %s " %(row["WebDeveloperType"], dev_type))
+				# print("%s - %s " %(row["WebDeveloperType"], dev_type))
 				if dev_type == "Webdeveloper" and row["WebDeveloperType"] != "NA":
 					row["DeveloperType"] = row["WebDeveloperType"].replace(" ", "").replace(",","").split(";")[0]
 					break
@@ -107,6 +103,7 @@ with open('survey_results_public.csv', 'r') as infile:
 			split_want_languages = row["WantWorkLanguage"].replace(" ", "").replace(",","").split(";")
 			continue_working_language = False
 			learn_new_language = False
+
 			for language in split_have_languages:
 				if language in split_want_languages:
 					continue_working_language = True
@@ -116,7 +113,7 @@ with open('survey_results_public.csv', 'r') as infile:
 				if language not in split_have_languages:
 					learn_new_language = True
 					break
-					
+
 			if continue_working_language: row["ContinueWorkingLanguage"] = 1
 			else: row["ContinueWorkingLanguage"] = 0
 			if learn_new_language: row["LearnNewLanguage"] = 1
@@ -165,7 +162,7 @@ for i in range(len(salary_brackets)-1):
 
 sorted_keys = sorted(keys)
 outlist_len = len(outlist)
-with open('amrine_cleaned_survey_resultsv1.4.csv', 'w') as outfile:
+with open('amrine_cleaned_survey_resultsv1.5.csv', 'w') as outfile:
 	outfile.write(" id ," + ",".join(sorted(keys)) + "\n")
 	for i in range(outlist_len):
 		writeRow = '%i' %i
@@ -174,6 +171,14 @@ with open('amrine_cleaned_survey_resultsv1.4.csv', 'w') as outfile:
 			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "NA":
 				index_of_bracket = bin_search(salary_brackets, int(outlist[i][key]), 0, len(salary_brackets))
 				writeRow = ",".join([writeRow, salary_brackets_str[index_of_bracket-1]])
+			elif key == "JobSatisfaction" and outlist[i][key] != "NA":
+				satisfaction = int(outlist[i][key])
+				if satisfaction <= 10 and satisfaction > 6:
+					writeRow = ",".join([writeRow, "Satisfied"])
+				elif satisfaction <= 6 and satisfaction > 4:
+					writeRow = ",".join([writeRow, "Unsatisfied"])
+				elif satisfaction <= 4:
+					writeRow = ",".join([writeRow, "Very Unsatisfied"])
 			else:
 				try:
 					writeRow = ",".join([writeRow, str(outlist[i][key]).replace(",", "")])
