@@ -38,8 +38,11 @@ keys = ['Race', 'Gender', 'Country', 'MajorUndergrad', \
 		'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction',\
 		'Salary', 'ExpectedSalary']
 """
-keys = ['MajorUndergrad', 'DeveloperType', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction',\
-		'Salary']
+#'ProgramHobby', 'HomeRemote', 'YearsProgram',
+keys = ['Race', 'Gender', 'Country', 'MajorUndergrad', 'DeveloperType', \
+		'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction',\
+		'Salary', "ContinueWorkingLanguage", "LearnNewLanguage",  \
+		'WorkStart', 'Overpaid', 'ChangeWorld', 'ChallengeMyself', 'CheckInCode']
 language_keys = set(["PHP", "Perl", "Python", "SQL",\
 "Swift", "TypeScript", "C", "C#", "C++", "Java", "JavaScript", "Other"])
 language_keys2 = set()
@@ -81,17 +84,46 @@ with open('survey_results_public.csv', 'r') as infile:
 			min_salary = min(int(float(row["ExpectedSalary"])), min_salary)
 			max_salary = max(int(float(row["ExpectedSalary"])), max_salary)
         # assigns single gender as either gender conforming or nonbinary
-		for gender in row["Gender"].split(";"):
-			if "Female" in row["Gender"]:
-				row["Gender"] = "Female"
-			elif "Male" in row["Gender"]:
-				row["Gender"] = "Male"
-			elif "NA" in row["Gender"]:
-				row["Gender"] = "NA"
-			else:
-				row["Gender"] = "Nonbinary"
-			break
+		
+		if "Female" in row["Gender"]:
+			row["Gender"] = "Female"
+		elif "Male" in row["Gender"]:
+			row["Gender"] = "Male"
+		elif "NA" in row["Gender"]:
+			row["Gender"] = "NA"
+		else:
+			row["Gender"] = "Nonbinary"
+		
+		if row["DeveloperType"] != "NA":
+			split_row = row["DeveloperType"].replace(" ", "").replace(",","").split(";")
+			for dev_type in split_row:
+				print("%s - %s " %(row["WebDeveloperType"], dev_type))
+				if dev_type == "Webdeveloper" and row["WebDeveloperType"] != "NA":
+					row["DeveloperType"] = row["WebDeveloperType"].replace(" ", "").replace(",","").split(";")[0]
+					break
 
+		if row["HaveWorkedLanguage"] != "NA" and row["WantWorkLanguage"] != "NA":
+			split_have_languages = row["HaveWorkedLanguage"].replace(" ", "").replace(",","").split(";")
+			split_want_languages = row["WantWorkLanguage"].replace(" ", "").replace(",","").split(";")
+			continue_working_language = False
+			learn_new_language = False
+			for language in split_have_languages:
+				if language in split_want_languages:
+					continue_working_language = True
+					break
+
+			for language in split_want_languages:
+				if language not in split_have_languages:
+					learn_new_language = True
+					break
+					
+			if continue_working_language: row["ContinueWorkingLanguage"] = 1
+			else: row["ContinueWorkingLanguage"] = 0
+			if learn_new_language: row["LearnNewLanguage"] = 1
+			else: row["LearnNewLanguage"] = 0
+
+		if row["Race"] == "": row["Race"] = "NA"
+		"""
 		if row["HaveWorkedLanguage"] != "NA":
 			split_languages = row["HaveWorkedLanguage"].replace(" ", "").replace(",","").split(";")
 			for language in split_languages:
@@ -111,16 +143,17 @@ with open('survey_results_public.csv', 'r') as infile:
 				else:
 					language_keys2.add("WantOther")
 					row["WantOther"] = 1
+		"""
 		for key in row.keys():
 			#if row[key] == "NA" or row[key] == "I don't know" or row[key] == "I prefer not to say":
 			if row[key] == "I don't know" or row[key] == "I prefer not to say":
 				row[key] = "NA"
 
 		outlist.append(row)
-
+"""
 for key in language_keys2:
 	keys.append(key)
-
+"""
 salary_brackets = [x*10000 for x in range(min_salary//10000, (max_salary//10000))]
 salary_brackets.append(190000)
 salary_brackets.append(200000)
@@ -132,7 +165,7 @@ for i in range(len(salary_brackets)-1):
 
 sorted_keys = sorted(keys)
 outlist_len = len(outlist)
-with open('amrine_cleaned_survey_resultsv1.3.csv', 'w') as outfile:
+with open('amrine_cleaned_survey_resultsv1.4.csv', 'w') as outfile:
 	outfile.write(" id ," + ",".join(sorted(keys)) + "\n")
 	for i in range(outlist_len):
 		writeRow = '%i' %i
@@ -151,6 +184,6 @@ with open('amrine_cleaned_survey_resultsv1.3.csv', 'w') as outfile:
 						writeRow = ",".join([writeRow, ""])
 					else:
 						writeRow = ",".join([writeRow, "0"])
-		if outlist[i]["JobSatisfaction"] != "NA" and outlist[i]["Salary"] != "NA":
+		if outlist[i]["JobSatisfaction"] != "NA":
 			writeRow = "\n".join([writeRow, ''])
 			outfile.write(writeRow)
