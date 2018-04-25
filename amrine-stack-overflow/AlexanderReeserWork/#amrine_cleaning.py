@@ -42,14 +42,17 @@ keys = ['Race', 'Gender', 'Country', 'MajorUndergrad', \
 keys = ['Race', 'Gender', 'Country', 'MajorUndergrad', 'DeveloperType', \
 		'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction',\
 		'Salary', "ContinueWorkingLanguage", "LearnNewLanguage",  \
-		'WorkStart', 'Overpaid', 'ChangeWorld', 'ChallengeMyself', 'CheckInCode']
+		'WorkStart', 'Overpaid', 'ChangeWorld', 'ChallengeMyself', 'CheckInCode',\
+		'HomeRemote', 'YearsProgram', "FormalEducation"]
 language_keys = set(["PHP", "Perl", "Python", "SQL",\
 "Swift", "TypeScript", "C", "C#", "C++", "Java", "JavaScript", "Other"])
 language_keys2 = set()
+data_science_types = set(["Data scientist", "Machine learning specialist", "Developer with a statistics or mathematics background"])
+developer_types = set(["Mobile developer", "Desktop applications developer", "DevOps specialist","Database administrator","Systems administrator"])
 
 min_salary = 10**100
 max_salary = 0
-gender_keys = ['male', 'female', 'nonbinary']
+
 index = 0
 with open('survey_results_public.csv', 'r') as infile:
 	reader = csv.DictReader(infile)
@@ -81,21 +84,25 @@ with open('survey_results_public.csv', 'r') as infile:
 			min_salary = min(int(float(row["ExpectedSalary"])), min_salary)
 			max_salary = max(int(float(row["ExpectedSalary"])), max_salary)
         # assigns single gender as either gender conforming or nonbinary
-		if "Female" in row["Gender"]:
-			row["Gender"] = "Female"
-		elif "Male" in row["Gender"]:
-			row["Gender"] = "Male"
-		elif "NA" in row["Gender"]:
-			row["Gender"] = "NA"
-		else:
-			row["Gender"] = "Nonbinary"
+		if "Female" in row["Gender"]: row["Gender"] = "Female"
+		elif "Male" in row["Gender"]: row["Gender"] = "Male"
+		elif "NA" in row["Gender"]: row["Gender"] = ""
+		else: row["Gender"] = "Nonbinary"
 
 		if row["DeveloperType"] != "NA":
-			split_row = row["DeveloperType"].replace(" ", "").replace(",","").split(";")
+			split_row = row["DeveloperType"].replace(",","").split(";")
 			for dev_type in split_row:
 				# print("%s - %s " %(row["WebDeveloperType"], dev_type))
-				if dev_type == "Webdeveloper" and row["WebDeveloperType"] != "NA":
+				if dev_type == "Web developer" and row["WebDeveloperType"] != "NA":
 					row["DeveloperType"] = row["WebDeveloperType"].replace(" ", "").replace(",","").split(";")[0]
+					break
+				elif dev_type in developer_types:
+					row["DeveloperType"] = row["DeveloperType"].replace(" ", "").replace(",","").split(";")[0]
+					break
+				elif dev_type in data_science_types:
+					row["DeveloperType"] = "DataScientist"
+				else:
+					row["DeveloperType"] = "Other"
 					break
 
 		if row["HaveWorkedLanguage"] != "NA" and row["WantWorkLanguage"] != "NA":
@@ -119,7 +126,7 @@ with open('survey_results_public.csv', 'r') as infile:
 			if learn_new_language: row["LearnNewLanguage"] = 1
 			else: row["LearnNewLanguage"] = 0
 
-		if row["Race"] == "": row["Race"] = "NA"
+		if row["Race"] == "": row["Race"] = ""
 		"""
 		if row["HaveWorkedLanguage"] != "NA":
 			split_languages = row["HaveWorkedLanguage"].replace(" ", "").replace(",","").split(";")
@@ -143,8 +150,8 @@ with open('survey_results_public.csv', 'r') as infile:
 		"""
 		for key in row.keys():
 			#if row[key] == "NA" or row[key] == "I don't know" or row[key] == "I prefer not to say":
-			if row[key] == "I don't know" or row[key] == "I prefer not to say":
-				row[key] = "NA"
+			if row[key] == "I don't know" or row[key] == "I prefer not to say" or row[key] == "NA":
+				row[key] = ""
 
 		outlist.append(row)
 """
@@ -162,23 +169,16 @@ for i in range(len(salary_brackets)-1):
 
 sorted_keys = sorted(keys)
 outlist_len = len(outlist)
-with open('amrine_cleaned_survey_resultsv1.5.csv', 'w') as outfile:
+with open('amrine_cleaned_survey_resultsv1.6.nullvals.csv', 'w') as outfile:
 	outfile.write(" id ," + ",".join(sorted(keys)) + "\n")
 	for i in range(outlist_len):
 		writeRow = '%i' %i
 		#print(i)
 		for key in sorted_keys:
-			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "NA":
+			if (key == "Salary" or key == "ExpectedSalary") and outlist[i][key] != "":
 				index_of_bracket = bin_search(salary_brackets, int(outlist[i][key]), 0, len(salary_brackets))
 				writeRow = ",".join([writeRow, salary_brackets_str[index_of_bracket-1]])
-			elif key == "JobSatisfaction" and outlist[i][key] != "NA":
-				satisfaction = int(outlist[i][key])
-				if satisfaction <= 10 and satisfaction > 6:
-					writeRow = ",".join([writeRow, "Satisfied"])
-				elif satisfaction <= 6 and satisfaction > 4:
-					writeRow = ",".join([writeRow, "Unsatisfied"])
-				elif satisfaction <= 4:
-					writeRow = ",".join([writeRow, "Very Unsatisfied"])
+
 			else:
 				try:
 					writeRow = ",".join([writeRow, str(outlist[i][key]).replace(",", "")])
@@ -189,6 +189,6 @@ with open('amrine_cleaned_survey_resultsv1.5.csv', 'w') as outfile:
 						writeRow = ",".join([writeRow, ""])
 					else:
 						writeRow = ",".join([writeRow, "0"])
-		if outlist[i]["JobSatisfaction"] != "NA":
+		if outlist[i]["JobSatisfaction"] != "":
 			writeRow = "\n".join([writeRow, ''])
 			outfile.write(writeRow)
