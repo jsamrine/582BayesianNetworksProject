@@ -15,7 +15,13 @@ job security and job satisfaction
 
 
 with open('survey_results_public.csv', 'r') as infile:
-    keys = ['MajorUndergrad', 'CompetePeers', 'CompanySize', 'CompanyType', 'JobSatisfaction', 'ProgramHobby', 'FormalEducation', 'HomeRemote', 'YearsProgram', 'JobSeekingStatus', 'WorkStart', 'Overpaid', 'LastNewJob', 'ChangeWorld', 'ChallengeMyself', 'UnderstandComputers', 'CheckInCode']
+    keys = ['MajorUndergrad', 'CompetePeers', 'CompanySize', 'CompanyType', 
+            'JobSatisfaction', 'ProgramHobby', 'FormalEducation', 'HomeRemote', 
+            'YearsProgram', 'JobSeekingStatus', 'WorkStart', 'Overpaid', 
+            'LastNewJob', 'ChangeWorld', 'ChallengeMyself', 'UnderstandComputers', 
+            'CheckInCode', 'PronounceGIF', 'ProblemSolving', 'BuildingThings',
+            'LearningNewTech', 'BoringDetails', 'ClickyKeys', 'VersionControl', 'ShipIt',
+            'EnjoyDebugging', 'InTheZone', 'StackOverflowSatisfaction']
     reader = csv.DictReader(infile)
     total = 0
     outGraph = []
@@ -30,7 +36,7 @@ with open('survey_results_public.csv', 'r') as infile:
         if noNull:
             outGraph.append(row)
 
-with open('full_cleaned_survey_results_public.csv', 'w') as outfile:
+with open('full_cleaned_survey_results_public2.csv', 'w') as outfile:
     string = ",".join(keys)
 
     outfile.write(" ,%s\n" %string)
